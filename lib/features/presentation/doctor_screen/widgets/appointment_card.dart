@@ -1,5 +1,3 @@
-// lib/doctor_screen/widgets/appointment_card.dart
-
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -12,17 +10,22 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double percentage = total != 0 ? (completed / total) : 0;
+
     return Card(
       color: Color(0xFF7E91D4),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            CustomPaint(
-              size: Size(100, 100),
-              painter: SpeedometerPainter(completed / total),
+            Container(
+              width: 100,
+              height: 100,
+              child: CustomPaint(
+                painter: CircularPainter(percentage),
+              ),
             ),
-            SizedBox(height: 1),
+            SizedBox(height: 8),
             Text(
               '$completed/$total',
               style: TextStyle(
@@ -31,7 +34,7 @@ class AppointmentCard extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 1),
+            SizedBox(height: 8),
             Text(
               title,
               textAlign: TextAlign.center,
@@ -48,46 +51,41 @@ class AppointmentCard extends StatelessWidget {
   }
 }
 
-class SpeedometerPainter extends CustomPainter {
-  final double ratio;
-  SpeedometerPainter(this.ratio);
+class CircularPainter extends CustomPainter {
+  final double percentage;
+  CircularPainter(this.percentage);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
+    Paint outerCircle = Paint()
+      ..strokeWidth = 8
       ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 8.0;
+      ..style = PaintingStyle.stroke;
 
-    Paint arcPaint = Paint()
+    Paint completeArc = Paint()
+      ..strokeWidth = 8
       ..color = Colors.green
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8.0
       ..strokeCap = StrokeCap.round;
 
-    double centerX = size.width / 2;
-    double centerY = size.height / 2;
-    double radius = min(centerX, centerY);
+    Offset center = Offset(size.width / 2, size.height / 2);
+    double radius = min(size.width / 2, size.height / 2);
+
+    canvas.drawCircle(center, radius, outerCircle);
+
+    double angle = 2 * pi * percentage;
 
     canvas.drawArc(
-      Rect.fromCircle(center: Offset(centerX, centerY), radius: radius),
-      -pi,
-      pi,
+      Rect.fromCircle(center: center, radius: radius),
+      -pi / 2,
+      angle,
       false,
-      paint,
-    );
-
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(centerX, centerY), radius: radius),
-      -pi,
-      pi * ratio,
-      false,
-      arcPaint,
+      completeArc,
     );
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }

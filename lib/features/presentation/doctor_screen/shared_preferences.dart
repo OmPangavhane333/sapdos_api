@@ -21,4 +21,6 @@ class SharedPreferences {
   String? getString(String key) {
     return _storage[key];
   }
+
+  remove(String userUidKey) {}
 }

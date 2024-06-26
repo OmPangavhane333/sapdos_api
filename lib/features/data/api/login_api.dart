@@ -1,5 +1,7 @@
 import 'package:http/http.dart' as http;
+import 'package:sapdos/features/presentation/doctor_screen/shared_preferences.dart';
 import 'dart:convert';
+
 
 class LoginApi {
   static Future<Map<String, dynamic>?> login(String email, String password) async {
@@ -21,6 +23,8 @@ class LoginApi {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
+        // Save login info to shared preferences
+        await saveLoginInfo(res);
         return res;
       } else {
         print('Failed to login. Status code: ${response.statusCode}');
@@ -30,5 +34,10 @@ class LoginApi {
       print('Error during login: $e');
       return null;
     }
+  }
+
+  static Future<void> saveLoginInfo(Map<String, dynamic> userInfo) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userInfo', jsonEncode(userInfo));
   }
 }

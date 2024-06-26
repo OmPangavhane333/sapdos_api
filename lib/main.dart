@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         '/screen1': (context) => Screen1(),
         '/screen2': (context) => Screen2(),
         '/screen3': (context) => Screen3(),
-        '/doctor_screen/doctor_screen1': (context) => DoctorScreen1(),
+        '/doctor_screen/doctor_screen1': (context) => DoctorScreen1(userUid: '1dbaa439-a8e0-4f7b-93c4-191d11e537c1',),
         '/doctor_screen/doctor_screen2': (context) => DoctorScreen2(),
         '/patient_screens/patient_screen1': (context) => PatientScreen1(),
       },

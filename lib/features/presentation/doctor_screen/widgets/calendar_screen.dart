@@ -6,7 +6,7 @@ import 'appointment_item.dart';
 class CalendarScreen extends StatelessWidget {
   final DateTime selectedDate;
 
-  CalendarScreen({required this.selectedDate});
+  CalendarScreen({required this.selectedDate, required List<Map<String, dynamic>> appointments});
 
   @override
   Widget build(BuildContext context) {

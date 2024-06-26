@@ -4,7 +4,7 @@ abstract class LoginState extends Equatable {
   const LoginState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoginInitial extends LoginState {}
@@ -13,14 +13,15 @@ class LoginLoading extends LoginState {}
 
 class LoginSuccess extends LoginState {
   final String token;
+  final String role;
 
-  const LoginSuccess({required this.token});
-
-  @override
-  List<Object> get props => [token];
+  const LoginSuccess({required this.token, required this.role});
 
   @override
-  String toString() => 'LoginSuccess { token: $token }';
+  List<Object?> get props => [token, role];
+
+  @override
+  String toString() => 'LoginSuccess { token: $token, role: $role }';
 }
 
 class LoginFailure extends LoginState {
@@ -29,10 +30,8 @@ class LoginFailure extends LoginState {
   const LoginFailure({required this.error});
 
   @override
-  List<Object> get props => [error];
+  List<Object?> get props => [error];
 
   @override
   String toString() => 'LoginFailure { error: $error }';
 }
-
-// Add more states as needed for your application
