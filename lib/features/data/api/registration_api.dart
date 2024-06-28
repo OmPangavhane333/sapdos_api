@@ -1,29 +1,30 @@
-// registration_api.dart
-
+// lib/features/data/api/registration_api.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sapdos/features/presentation/login_screens/signup/signup_model.dart';
 
-class RegistrationApi {
-  static Future<Map<String, dynamic>?> registerUser(Map<String, dynamic> requestBody) async {
-    String url = 'https://sapdos-api-v2.azurewebsites.net/api/Credentials/Register';
 
-    try {
-      var response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(requestBody),
-      );
+String baseUrl = "https://sapdos-api-v2.azurewebsites.net";
 
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to register: ${jsonDecode(response.body)['message']}');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Error during registration. Please try again.');
-    }
+Future<bool> postSignup({required RegistrationModel registrationModel}) async {
+  var registerEncodedJSON = json.encode(registrationModel.toJson());
+  var headers = {"Content-Type": "application/json", "Accept": "*/*"};
+
+  final response = await http.post(
+    Uri.parse('$baseUrl/api/Credentials/Register'),
+    body: registerEncodedJSON,
+    headers: headers,
+  );
+
+  if (response.statusCode == 200) {
+    print("Signup successful: ${response.body}");
+    return true;
+  } else if (response.statusCode == 400) {
+    print("Failed to signup: Invalid Email ID");
+    print('Response: ${response.body}');
+    return false;
+  } else {
+    print("Failed to signup: ${response.body}");
+    return false;
   }
 }

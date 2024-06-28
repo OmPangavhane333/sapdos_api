@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // Import http package correctly
+import 'package:http/http.dart' as http; 
 import 'package:sapdos/features/presentation/doctor_screen/model/doctor_model.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/appointment_card.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/appointment_list.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/calendar_screen.dart';
-import 'package:sapdos/services/api_service.dart'; // Assuming you have ApiService for individual doctor fetching
+import 'package:sapdos/services/api_service.dart'; 
 
 String base_url = "https://sapdos-api-v2.azurewebsites.net";
 
@@ -76,7 +76,7 @@ class _DoctorScreen1State extends State<DoctorScreen1> {
       setState(() {
         isLoading = false;
       });
-      // Handle the error appropriately in your app
+      
     }
   }
 

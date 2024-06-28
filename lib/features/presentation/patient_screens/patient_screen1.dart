@@ -15,7 +15,7 @@ class _PatientScreen1State extends State<PatientScreen1> {
   late Future<Map<String, dynamic>> _futureData;
   late Future<PatientDetailsModel?> _futurePatient;
 
-  // Simulating authenticated user ID (replace with actual implementation)
+  
   String userId = '6b8fcda6-5c96-4ea6-8351-527cae571f59';
 
   @override

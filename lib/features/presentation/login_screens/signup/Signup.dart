@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'signup_model.dart'; // Import your model
-
-String base_url = "https://sapdos-api-v2.azurewebsites.net";
+import 'package:sapdos/features/data/api/registration_api.dart';
+import 'signup_model.dart'; 
 
 class Screen2 extends StatefulWidget {
   @override
@@ -37,29 +34,6 @@ class _Screen2State extends State<Screen2> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  Future<bool> postSignup({required RegistrationModel registrationModel}) async {
-    var registerEncodedJSON = json.encode(registrationModel.toJson());
-    var headers = {"Content-Type": "application/json", "Accept": "*/*"};
-
-    final response = await http.post(
-      Uri.parse('$base_url/api/Credentials/Register'),
-      body: registerEncodedJSON,
-      headers: headers,
-    );
-
-    if (response.statusCode == 200) {
-      print("Signup successful: ${response.body}");
-      return true;
-    } else if (response.statusCode == 400) {
-      print("Failed to signup: Invalid Email ID");
-      print('Response: ${response.body}');
-      return false;
-    } else {
-      print("Failed to signup: ${response.body}");
-      return false;
-    }
   }
 
   void _register() async {
@@ -97,7 +71,7 @@ class _Screen2State extends State<Screen2> {
     bool success = await postSignup(registrationModel: registrationModel);
 
     if (success) {
-      Navigator.pushNamed(context, '/screen3'); // Replace '/screen3' with your success screen route
+      Navigator.pushNamed(context, '/screen3'); 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -318,3 +292,4 @@ class _Screen2State extends State<Screen2> {
     );
   }
 }
+

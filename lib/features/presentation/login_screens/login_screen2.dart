@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sapdos/features/data/api/login_api.dart';
 import 'dart:convert';
-
 import 'responsive_helper.dart';
+
 
 class Screen3 extends StatefulWidget {
   @override
@@ -27,41 +28,20 @@ class _Screen3State extends State<Screen3> {
     String email = _emailController.text.trim();
     String password = _passwordController.text;
 
-    // API endpoint
-    String url = 'https://sapdos-api-v2.azurewebsites.net/api/Credentials/Login';
+    try {
+      Map<String, dynamic> data = await login(email, password);
+      String role = data['role']; 
 
-    // Request body
-    Map<String, String> body = {
-      'userName': email,
-      'password': password,
-    };
-
-    // Send POST request
-    var response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(body),
-    );
-
-    // Handle response
-    if (response.statusCode == 200) {
-      // Successful login
-      // Decode the response body
-      Map<String, dynamic> data = jsonDecode(response.body);
-      String role = data['role']; // Assuming role is returned from API
-
-      // Navigate based on role
+     
       if (role.toLowerCase() == 'doctor') {
         Navigator.pushNamed(context, '/doctor_screen/doctor_screen1');
       } else {
         Navigator.pushNamed(context, '/patient_screens/patient_screen1');
       }
-    } else {
-      // Handle error
-      print('Failed to login. Status code: ${response.statusCode}');
-      // Show error message to the user
+    } catch (e) {
+      
+      print('Failed to login: $e');
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to login'),
@@ -78,7 +58,7 @@ class _Screen3State extends State<Screen3> {
         builder: (context, constraints) {
           return Row(
             children: [
-              if (!ResponsiveHelper.isMobile(context)) // Only show the image on larger screens
+              if (!ResponsiveHelper.isMobile(context)) 
                 Expanded(
                   flex: 1,
                   child: Container(
@@ -116,7 +96,7 @@ class _Screen3State extends State<Screen3> {
                           Text(
                             'SAPDOS',
                             style: TextStyle(
-                              fontSize: ResponsiveHelper.getFontSize(context, 24), // Adjust font size
+                              fontSize: ResponsiveHelper.getFontSize(context, 24), 
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),
@@ -127,21 +107,21 @@ class _Screen3State extends State<Screen3> {
                             'Welcome Back',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: ResponsiveHelper.getFontSize(context, 18), // Adjust font size
+                              fontSize: ResponsiveHelper.getFontSize(context, 18), 
                             ),
                             textAlign: TextAlign.center,
                           ),
                           Text(
                             'Enter existing account’s details',
                             style: TextStyle(
-                              fontSize: ResponsiveHelper.getFontSize(context, 13), // Adjust font size
+                              fontSize: ResponsiveHelper.getFontSize(context, 13), 
                             ),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: ResponsiveHelper.getSpacing(context, 20)),
                           Center(
                             child: SizedBox(
-                              width: ResponsiveHelper.isMobile(context) ? 200 : 300, // Adjust width based on screen size
+                              width: ResponsiveHelper.isMobile(context) ? 200 : 300, 
                               child: TextField(
                                 controller: _emailController,
                                 onChanged: (value) {
@@ -149,7 +129,7 @@ class _Screen3State extends State<Screen3> {
                                 },
                                 decoration: InputDecoration(
                                   labelText: 'Email address/ Phone No.',
-                                  prefixIcon: Icon(Icons.email), // Add email icon
+                                  prefixIcon: Icon(Icons.email), 
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -160,7 +140,7 @@ class _Screen3State extends State<Screen3> {
                           SizedBox(height: ResponsiveHelper.getSpacing(context, 10)),
                           Center(
                             child: SizedBox(
-                              width: ResponsiveHelper.isMobile(context) ? 200 : 300, // Adjust width based on screen size
+                              width: ResponsiveHelper.isMobile(context) ? 200 : 300, 
                               child: TextField(
                                 controller: _passwordController,
                                 onChanged: (value) {
@@ -168,7 +148,7 @@ class _Screen3State extends State<Screen3> {
                                 },
                                 decoration: InputDecoration(
                                   labelText: 'Password',
-                                  prefixIcon: Icon(Icons.lock), // Add lock icon
+                                  prefixIcon: Icon(Icons.lock), 
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -210,7 +190,7 @@ class _Screen3State extends State<Screen3> {
                               child: ElevatedButton(
                                 onPressed: _isEmailValid(_emailController.text) && _isPasswordValid(_passwordController.text)
                                     ? () {
-                                        _login(); // Call login function
+                                        _login(); 
                                       }
                                     : null,
                                 style: ElevatedButton.styleFrom(

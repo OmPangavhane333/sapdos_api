@@ -9,7 +9,7 @@ class Screen1 extends StatelessWidget {
         builder: (context, constraints) {
           return Row(
             children: [
-              if (constraints.maxWidth >= 600) // Only show the image on larger screens
+              if (constraints.maxWidth >= 600) 
                 Expanded(
                   flex: 1,
                   child: Container(
@@ -48,14 +48,14 @@ class Screen1 extends StatelessWidget {
                           child: Text(
                             'SAPDOS',
                             style: TextStyle(
-                              fontSize: ResponsiveHelper.getFontSize(context, 44), // Adjust font size based on screen width
+                              fontSize: ResponsiveHelper.getFontSize(context, 44), 
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF13235A),
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        SizedBox(height: ResponsiveHelper.getSpacing(context, 100)), // Adjust spacing based on screen width
+                        SizedBox(height: ResponsiveHelper.getSpacing(context, 100)), 
                         Text(
                           'Login to your sapdos account or create one now.',
                           style: TextStyle(
