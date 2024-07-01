@@ -18,12 +18,12 @@ class AuthRepository {
       if (response.statusCode == 200) {
         return true;
       } else {
-        // Handle other status codes
+        
         print('Login failed with status code: ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      // Handle network and other errors
+      
       print('Error during login: $e');
       return false;
     }
@@ -43,12 +43,12 @@ class AuthRepository {
       if (response.statusCode == 200) {
         return true;
       } else {
-        // Handle other status codes
+        
         print('Registration failed with status code: ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      // Handle network and other errors
+      
       print('Error during registration: $e');
       return false;
     }

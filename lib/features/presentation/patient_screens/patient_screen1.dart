@@ -140,7 +140,7 @@ class PatientScreenContent extends StatelessWidget {
                         PopupMenuButton<String>(
                           icon: Icon(Icons.filter_list, color: Colors.white),
                           onSelected: (value) {
-                            // Implement filter logic here
+                            
                           },
                           itemBuilder: (BuildContext context) {
                             return {'Filter by ratings', 'Filter by name'}

@@ -49,7 +49,7 @@ class _LoginScreen1State extends State<LoginScreen1> {
       body: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginLoading) {
-            // Show loading indicator
+
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -60,14 +60,14 @@ class _LoginScreen1State extends State<LoginScreen1> {
               },
             );
           } else if (state is LoginSuccess) {
-            Navigator.pop(context); // Remove the loading indicator
+            Navigator.pop(context); 
             if (state.role.toLowerCase() == 'doctor') {
               Navigator.pushNamed(context, '/doctor_screen/doctor_screen1');
             } else {
               Navigator.pushNamed(context, '/patient_screens/patient_screen1');
             }
           } else if (state is LoginFailure) {
-            Navigator.pop(context); // Remove the loading indicator
+            Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Failed to login: ${state.error}'),

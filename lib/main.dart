@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sapdos/application/bloc/auth_bloc.dart';
-import 'package:sapdos/application/bloc/login_bloc.dart';
-import 'package:sapdos/application/bloc/registration_bloc.dart';
 import 'package:sapdos/application/bloc/patient_bloc.dart';
-import 'package:sapdos/application/bloc/patient_screen_bloc.dart';
-import 'package:sapdos/application/bloc/doctor_screen_bloc.dart'; // Import your DoctorScreenBloc here
+import 'package:sapdos/application/login_bloc/login_bloc.dart';
 import 'package:sapdos/features/presentation/doctor_screen/doctor_screen1.dart';
 import 'package:sapdos/features/presentation/doctor_screen/doctor_screen2.dart';
 import 'package:sapdos/features/presentation/login_screens/login_screen1.dart';
 import 'package:sapdos/features/presentation/login_screens/login_screen2.dart';
+import 'package:sapdos/features/presentation/login_screens/signup/bloc/registration_bloc.dart';
 import 'package:sapdos/features/presentation/login_screens/signup/signup.dart';
 import 'package:sapdos/features/presentation/patient_screens/patient_screen1.dart';
 import 'package:sapdos/features/presentation/patient_screens/patient_screen2.dart';
@@ -28,7 +26,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => RegistrationBloc()),
         BlocProvider(create: (context) => PatientBloc()),
         BlocProvider(create: (context) => PatientScreenBloc()),
-        BlocProvider(create: (context) => DoctorScreenBloc()), // Add DoctorScreenBloc here
+        BlocProvider(create: (context) => DoctorScreenBloc()),
       ],
       child: MaterialApp(
         title: 'SAPDOS',
@@ -36,7 +34,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         debugShowCheckedModeBanner: false,
-        home: LoginScreen1(), // Default screen, change as needed
+        home: LoginScreen1(),
         routes: {
           '/screen1': (context) => LoginScreen1(),
           '/screen2': (context) => Screen2(),

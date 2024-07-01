@@ -4,7 +4,7 @@ import 'package:sapdos/features/presentation/doctor_screen/model/doctor_model.da
 import 'package:sapdos/features/presentation/doctor_screen/widgets/appointment_card.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/appointment_list.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/calendar_screen.dart';
-import 'package:sapdos/application/doctor_bloc.dart'; // Import DoctorBloc
+import 'package:sapdos/application/doctor_bloc.dart'; 
 
 class DoctorScreen1 extends StatefulWidget {
   final String userUid;
