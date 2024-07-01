@@ -1,49 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sapdos/features/presentation/doctor_screen/model/doctor_model.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/appointment_card.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/appointment_list.dart';
 import 'package:sapdos/features/presentation/doctor_screen/widgets/calendar_screen.dart';
-import 'package:sapdos/services/api_service.dart'; 
-
-String base_url = "https://sapdos-api-v2.azurewebsites.net";
-
-Future<List<DoctorModel>> getAllDoctor() async {
-  try {
-    final response = await http.get(Uri.parse('$base_url/api/Patient/GetAllUser?Role=doctor'));
-    if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
-      List<DoctorModel> doctors = jsonList.map((json) => DoctorModel.fromJson(json)).toList();
-      return doctors;
-    } else {
-      return [];
-    }
-  } catch (e) {
-    print('Error in getAllDoctor: $e');
-    throw Exception('Failed to fetch doctors');
-  }
-}
-
-Future<DoctorModel> getDoctorByUId(String id) async {
-  try {
-    final response = await http.get(Uri.parse('$base_url/api/Patient/GetDoctorByUId?DoctorUId=$id'));
-    if (response.statusCode == 200) {
-      dynamic jsonResponse = json.decode(response.body);
-      if (jsonResponse is List) {
-        jsonResponse = jsonResponse.first;
-      }
-      DoctorModel doctor = DoctorModel.fromJson(jsonResponse);
-      return doctor;
-    } else {
-      print('Error: status code ${response.statusCode}');
-      throw Exception('Failed to fetch doctor');
-    }
-  } catch (e) {
-    print('Error: $e');
-    throw Exception('Failed to fetch doctor');
-  }
-}
+import 'package:sapdos/application/doctor_bloc.dart'; // Import DoctorBloc
 
 class DoctorScreen1 extends StatefulWidget {
   final String userUid;
@@ -55,101 +16,102 @@ class DoctorScreen1 extends StatefulWidget {
 }
 
 class _DoctorScreen1State extends State<DoctorScreen1> {
-  DoctorModel? doctor;
-  bool isLoading = true;
+  late DoctorBloc doctorBloc;
 
   @override
   void initState() {
     super.initState();
-    fetchDoctor(widget.userUid);
+    doctorBloc = DoctorBloc();
+    doctorBloc.fetchDoctor(widget.userUid);
   }
 
-  Future<void> fetchDoctor(String uid) async {
-    try {
-      DoctorModel fetchedDoctor = await getDoctorByUId(uid);
-      setState(() {
-        doctor = fetchedDoctor;
-        isLoading = false;
-      });
-    } catch (e) {
-      print('Error fetching doctor: $e');
-      setState(() {
-        isLoading = false;
-      });
-      
-    }
+  @override
+  void dispose() {
+    doctorBloc.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: SizedBox(
-        width: 200,
-        child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Color(0xFF13235A),
+    return BlocBuilder<DoctorBloc, DoctorState>(
+      bloc: doctorBloc,
+      builder: (context, state) {
+        if (state is DoctorLoading) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('SAPDOS'),
+            ),
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (state is DoctorLoaded) {
+          DoctorModel doctor = state.doctor;
+          return Scaffold(
+            drawer: SizedBox(
+              width: 200,
+              child: Drawer(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                    DrawerHeader(
+                      decoration: BoxDecoration(
+                        color: Color(0xFF13235A),
+                      ),
+                      child: Text(
+                        'SAPDOS',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.category),
+                      title: Text('Categories'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.calendar_today),
+                      title: Text('Appointment'),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/calendar_screen');
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.chat),
+                      title: Text('Chat'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.settings),
+                      title: Text('Settings'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.logout),
+                      title: Text('Logout'),
+                      onTap: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/screen1',
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                child: Text(
-                  'SAPDOS',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
+              ),
+            ),
+            appBar: AppBar(
+              title: Text('SAPDOS'),
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(
+                        'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250'),
                   ),
                 ),
-              ),
-              ListTile(
-                leading: Icon(Icons.category),
-                title: Text('Categories'),
-              ),
-              ListTile(
-                leading: Icon(Icons.calendar_today),
-                title: Text('Appointment'),
-                onTap: () {
-                  Navigator.pushNamed(context, '/calendar_screen');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.chat),
-                title: Text('Chat'),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-              ),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text('Logout'),
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/screen1',
-                    (Route<dynamic> route) => false,
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      appBar: AppBar(
-        title: Text('SAPDOS'),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage('https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250'),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
+            body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +121,7 @@ class _DoctorScreen1State extends State<DoctorScreen1> {
                       Navigator.pushNamed(context, '/doctor_screen/doctor_screen2');
                     },
                     child: Text(
-                      'Hello!\nDr. ${doctor?.name}',
+                      'Hello!\nDr. ${doctor.name}',
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -188,12 +150,14 @@ class _DoctorScreen1State extends State<DoctorScreen1> {
                         lastDate: DateTime(2100),
                       );
                       if (selectedDate != null) {
+                        // Handle logic to fetch available slots
+                        // doctorBloc.fetchAvailableSlots(widget.userUid, selectedDate.toIso8601String());
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CalendarScreen(
                               selectedDate: selectedDate,
-                              appointments: [],
+                              appointments: [], // Replace with actual data
                             ),
                           ),
                         );
@@ -209,7 +173,7 @@ class _DoctorScreen1State extends State<DoctorScreen1> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Wednesday, March 7',
+                            'Wednesday, March 7', // Replace with dynamic date
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -226,11 +190,32 @@ class _DoctorScreen1State extends State<DoctorScreen1> {
                   ),
                   SizedBox(height: 10),
                   Expanded(
-                    child: AppointmentList(),
+                    child: AppointmentList(), // Replace with actual list widget
                   ),
                 ],
               ),
             ),
+          );
+        } else if (state is DoctorError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('SAPDOS'),
+            ),
+            body: Center(
+              child: Text('Error: ${state.message}'),
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('SAPDOS'),
+            ),
+            body: Center(
+              child: Text('Unknown state'),
+            ),
+          );
+        }
+      },
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sapdos/features/data/api/registration_api.dart';
-import 'signup_model.dart'; 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sapdos/features/presentation/login_screens/signup/bloc/registration_bloc.dart';
+import 'package:sapdos/features/presentation/login_screens/signup/bloc/registration_event.dart';
+import 'package:sapdos/features/presentation/login_screens/signup/bloc/registration_state.dart';
+import 'signup_model.dart';
 
 class Screen2 extends StatefulWidget {
   @override
@@ -36,7 +39,7 @@ class _Screen2State extends State<Screen2> {
     super.dispose();
   }
 
-  void _register() async {
+  void _register() {
     String name = _nameController.text.trim();
     String email = _emailController.text.trim();
     String age = _ageController.text.trim();
@@ -68,148 +71,152 @@ class _Screen2State extends State<Screen2> {
       password: password,
     );
 
-    bool success = await postSignup(registrationModel: registrationModel);
-
-    if (success) {
-      Navigator.pushNamed(context, '/screen3'); 
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Registration failed. Please try again.'),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    }
+    BlocProvider.of<RegistrationBloc>(context).add(RegisterButtonPressed(registrationModel: registrationModel));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: Color(0xFFE0E7FF),
-              child: Center(
-                child: Image.asset(
-                  'assets/images/rscreen1.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
+    return BlocListener<RegistrationBloc, RegistrationState>(
+      listener: (context, state) {
+        if (state is RegistrationSuccess) {
+          Navigator.pushNamed(context, '/screen3');
+        } else if (state is RegistrationFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error),
+              duration: Duration(seconds: 3),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
+          );
+        }
+      },
+      child: Scaffold(
+        body: Row(
+          children: [
+            Expanded(
+              flex: 1,
               child: Container(
-                padding: EdgeInsets.all(32.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'SAPDOS',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF13235A),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF13235A),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Select your profile',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF13235A),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildProfileOption('Doctor'),
-                          SizedBox(width: 16),
-                          _buildProfileOption('Patient'),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      _buildTextField(_nameController, 'Name', Icons.person),
-                      SizedBox(height: 16),
-                      _buildTextField(_emailController, 'Email', Icons.email),
-                      SizedBox(height: 16),
-                      _buildTextField(_ageController, 'Age', Icons.cake),
-                      SizedBox(height: 16),
-                      _buildTextField(_phoneController, 'Phone', Icons.phone),
-                      SizedBox(height: 16),
-                      _buildTextField(_addressController, 'Address', Icons.location_on),
-                      SizedBox(height: 16),
-                      _buildTextField(
-                          _specializationController,
-                          _selectedProfile == 'Doctor' ? 'Specialization' : 'Disease',
-                          Icons.work),
-                      SizedBox(height: 16),
-                      _selectedProfile == 'Doctor'
-                          ? _buildTextField(
-                              _experienceController, 'Experience', Icons.timeline)
-                          : SizedBox(),
-                      SizedBox(height: 16),
-                      _buildPasswordTextField(
-                          _passwordController, 'Password', _isPasswordVisible),
-                      SizedBox(height: 16),
-                      _buildPasswordTextField(
-                          _confirmPasswordController, 'Confirm Password', _isConfirmPasswordVisible),
-                      SizedBox(height: 32),
-                      ElevatedButton(
-                        onPressed: _isSignUpEnabled() ? _register : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF13235A),
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text('SIGN-UP'),
-                      ),
-                      SizedBox(height: 16),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/login'); // Replace '/login' with your login screen route
-                        },
-                        child: Text('Already registered? Login here.'),
-                      ),
-                    ],
+                color: Color(0xFFE0E7FF),
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/rscreen1.png',
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.all(32.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'SAPDOS',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF13235A),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF13235A),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Select your profile',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF13235A),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildProfileOption('Doctor'),
+                            SizedBox(width: 16),
+                            _buildProfileOption('Patient'),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        _buildTextField(_nameController, 'Name', Icons.person),
+                        SizedBox(height: 16),
+                        _buildTextField(_emailController, 'Email', Icons.email),
+                        SizedBox(height: 16),
+                        _buildTextField(_ageController, 'Age', Icons.cake),
+                        SizedBox(height: 16),
+                        _buildTextField(_phoneController, 'Phone', Icons.phone),
+                        SizedBox(height: 16),
+                        _buildTextField(_addressController, 'Address', Icons.location_on),
+                        SizedBox(height: 16),
+                        _buildTextField(_specializationController, _selectedProfile == 'Doctor' ? 'Specialization' : 'Disease', Icons.work),
+                        SizedBox(height: 16),
+                        _selectedProfile == 'Doctor'
+                            ? _buildTextField(_experienceController, 'Experience', Icons.timeline)
+                            : SizedBox(),
+                        SizedBox(height: 16),
+                        _buildPasswordTextField(_passwordController, 'Password', _isPasswordVisible),
+                        SizedBox(height: 16),
+                        _buildPasswordTextField(_confirmPasswordController, 'Confirm Password', _isConfirmPasswordVisible),
+                        SizedBox(height: 32),
+                        BlocBuilder<RegistrationBloc, RegistrationState>(
+                          builder: (context, state) {
+                            if (state is RegistrationLoading) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            return ElevatedButton(
+                              onPressed: _isSignUpEnabled() ? _register : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF13235A),
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Text('SIGN-UP'),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login'); // Replace '/login' with your login screen route
+                          },
+                          child: Text('Already registered? Login here.'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -241,8 +248,7 @@ class _Screen2State extends State<Screen2> {
     );
   }
 
-  Widget _buildPasswordTextField(
-      TextEditingController controller, String labelText, bool isVisible) {
+  Widget _buildPasswordTextField(TextEditingController controller, String labelText, bool isVisible) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -276,7 +282,7 @@ class _Screen2State extends State<Screen2> {
         setState(() {
           _selectedProfile = profile;
           if (profile == 'Patient') {
-            _specializationController.text = 'Disease';
+                        _specializationController.text = 'Disease';
             _experienceController.clear();
           } else {
             _specializationController.clear();
