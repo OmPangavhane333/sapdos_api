@@ -9,14 +9,14 @@ Sapdos is a Flutter application that fetches and displays a list of doctors and 
 - Handle loading, error, and empty states while fetching data.
 
 ## Screenshots
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(232).png
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(233).png
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(234).png
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(235).png
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(236).png
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(237).png
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(238).png
-https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(244).png
+![Screenshot 1](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(232).png)
+![Screenshot 2](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(233).png)
+![Screenshot 3](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(234).png)
+![Screenshot 4](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(235).png)
+![Screenshot 5](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(236).png)
+![Screenshot 6](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(237).png)
+![Screenshot 7](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(238).png)
+![Screenshot 8](https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(244).png)
 
 ## Getting Started
 
