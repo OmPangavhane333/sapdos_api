@@ -9,8 +9,14 @@ Sapdos is a Flutter application that fetches and displays a list of doctors and 
 - Handle loading, error, and empty states while fetching data.
 
 ## Screenshots
-
-[Include some screenshots of your app here]
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(232).png
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(233).png
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(234).png
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(235).png
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(236).png
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(237).png
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(238).png
+https://github.com/OmPangavhane333/sapdos_api/blob/main/Screenshot%20(244).png
 
 ## Getting Started
 
